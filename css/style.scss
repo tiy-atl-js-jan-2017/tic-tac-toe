@@ -1,0 +1,25 @@
+@mixin square-box ($size, $border-size, $border-color) {
+    height: $size;
+    width: $size;
+    display: inline-block;
+    border: $border-size double $border-color;
+}
+
+* {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.board {
+    width: 80%;
+
+    div {
+        @include square-box(150px, 3px, black);
+    }
+}
