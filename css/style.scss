@@ -21,5 +21,6 @@
 
     div {
         @include square-box(150px, 3px, black);
+        transition: background 0.5s ease-in-out;
     }
 }
