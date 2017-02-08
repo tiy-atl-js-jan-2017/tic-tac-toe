@@ -1,5 +1,24 @@
+// TODO
+/// * Add a button/checkbox for a random computer player (dumb)
+/// * CSS is still wonky af before a row is full, make players look nice
+/// * Don't allow a player to take another's place (be careful about switching players)
+/// * Force the game to stop after gameOver
+/// * Maybe have a new game button that just resets the board and render()
+/// * Scoreboard? That tracks X and Os across games.
+
 var board = ['', '', '', '', '', '', '', '', ''];
 var currentPlayer = "X";
+
+var WINS = [
+  [0,1,2],
+  [3,4,5],
+  [6,7,8],
+  [0,3,6],
+  [1,4,7],
+  [2,5,8],
+  [2,4,6],
+  [0,4,8]
+];
 
 function switchPlayer () {
   if (currentPlayer === "X") {
@@ -20,9 +39,11 @@ function boardTemplate (board) {
 
 function render () {
   var boardHTML = boardTemplate(board);
-  var greeting = $("#greeting");
-  greeting.after(boardHTML);
+  var container = $(".container");
+  container.append(boardHTML);
 }
+
+render();
 
 function changeBackground (event) {
   var target = $(event.target);
@@ -32,5 +53,37 @@ function changeBackground (event) {
   target.css('background', hexColor);
 }
 
+function isDraw(board) {
+  var emptySpaces = board.filter(function (x) { return x === ''; });
+  return emptySpaces.length === 0;
+}
 
-$(".space").click(changeBackground);
+function checkRow (row) { // row => [3,4,5]
+  return row.every(function (x) { return board[x] === currentPlayer; });
+}
+
+function isWinner () {
+  return WINS.some(checkRow);
+}
+
+function updateBoard () {
+  var spaces = $(".space");
+  board = $.map(spaces, function (box) { return $(box).html(); });
+  console.log(board);
+}
+
+function placePiece (event) {
+  var target = $(event.target);
+  target.html(currentPlayer);
+  updateBoard();
+
+  if (isWinner(board)) {
+    alert(`Congrats ${currentPlayer}, you won!`);
+  } else if (isDraw(board)) {
+    alert(`Sorry. Cats!`);
+  }
+
+  switchPlayer();
+}
+
+$(".space").click(placePiece);
